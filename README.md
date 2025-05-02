@@ -6,7 +6,7 @@ The `grinn-yocto-container` is a container image built on Ubuntu, specifically d
 
 Ensure that Docker is installed on your system by following the official setup guide [here](https://docs.docker.com/get-docker/).
 
-Alternatively, Podman is also supported. Installation instructions are available [here](https://podman.io/getting-started/installation).
+Alternatively, Podman is also supported. Installation instructions are available [here](https://podman.io/getting-started/installation). To use Podman, simply replace `docker` with `podman` in the commands provided in this document.
 
 ## Building the Container
 
@@ -15,11 +15,6 @@ To build the container image, clone this repository and navigate to the director
 ```bash
 docker build -t grinn-yocto-container .
 ```
-or if you are using Podman:
-
-```bash
-podman build -t grinn-yocto-container .
-```
 
 ## Pulling the Pre-built Container
 
@@ -27,11 +22,6 @@ If you prefer not to build the container yourself, you can pull a pre-built vers
 
 ```bash
 docker pull ghcr.io/grinn-global/grinn-yocto-container
-```
-or if you are using Podman:
-
-```bash
-podman pull ghcr.io/grinn-global/grinn-yocto-container
 ```
 
 This command will download the latest version of the container image, which is maintained and updated by the Grinn team.

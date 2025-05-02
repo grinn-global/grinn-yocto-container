@@ -1,9 +1,16 @@
-FROM ubuntu:24.04
+FROM ubuntu:22.04
 
-LABEL org.opencontainers.image.title="grinn-yocto"
-LABEL org.opencontainers.image.description="Grinn Yocto Build Environment"
-LABEL org.opencontainers.image.authors="Grinn <office@grinn-global.com>"
-LABEL org.opencontainers.image.url="https://github.com/grinn-global/grinn-yocto-container"
+ARG VERSION=0.1.0
+ARG BUILDTOOLS_VERSION=4.0.26
+ARG BUILDTOOLS_SHA256=6938ec21608f6152632093f078a8d30eb2a7c9efa686e373f907a1b907e7be47
+
+LABEL org.opencontainers.image.title="grinn-yocto-container" \
+    org.opencontainers.image.ref.name="grinn-yocto-container" \
+    org.opencontainers.image.description="Grinn Yocto Build Environment" \
+    org.opencontainers.image.version="${VERSION}" \
+    org.opencontainers.image.authors="Grinn <office@grinn-global.com>" \
+    org.opencontainers.image.url="https://github.com/grinn-global/grinn-yocto-container" \
+    org.opencontainers.image.licenses="MIT"
 
 ENV LANG=en_US.UTF-8 \
     LANGUAGE=en_US:en \
@@ -53,18 +60,26 @@ RUN apt-get update && \
         vim-tiny \
         wget \
         xz-utils \
-        zstd && \
+        zstd \
+        \
+        debianutils \
+        libegl1-mesa \
+        libelf-dev \
+        libsdl1.2-dev \
+        libstdc++-12-dev \
+        lz4 \
+        mesa-common-dev \
+        pylint && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
     \
     sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && \
     locale-gen && \
     \
-    userdel -r ubuntu && \
     useradd -m -s /bin/bash yoctouser && \
     usermod -aG sudo yoctouser && \
     \
-    install-yocto-buildtools.sh 4.3.4 0fd353011183ef3b046da152fcdc587142cff5e63aa35fbd7229af9d3cb1cb06
+    install-yocto-buildtools.sh "${BUILDTOOLS_VERSION}" "${BUILDTOOLS_SHA256}"
 
 USER yoctouser
 WORKDIR /home/yoctouser
@@ -72,8 +87,8 @@ WORKDIR /home/yoctouser
 RUN touch .sudo_as_admin_successful && \
     sed -i 's/#force_color_prompt=yes/force_color_prompt=yes/g' .bashrc && \
     sed -i "/^#export GCC_COLORS=/s/^#//" ~/.bashrc && \
-    echo '\nexport PS1="🐢 $PS1"' >> .bashrc && \
-    echo '\n. /opt/poky/4.3.4/environment-setup-x86_64-pokysdk-linux' >> .bashrc
+    printf '\n%s\n' 'export PS1="🐢 $PS1"' >> .bashrc && \
+    printf '\n%s\n' ". /opt/poky/${BUILDTOOLS_VERSION}/environment-setup-x86_64-pokysdk-linux" >> .bashrc
 
 ENTRYPOINT ["/usr/bin/dumb-init", "--"]
 CMD ["/bin/bash"]
