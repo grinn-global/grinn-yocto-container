@@ -10,6 +10,7 @@ LABEL org.opencontainers.image.title="grinn-yocto-container" \
     org.opencontainers.image.version="${VERSION}" \
     org.opencontainers.image.authors="Grinn <office@grinn-global.com>" \
     org.opencontainers.image.url="https://github.com/grinn-global/grinn-yocto-container" \
+    org.opencontainers.image.source="https://github.com/grinn-global/grinn-yocto-container" \
     org.opencontainers.image.licenses="MIT"
 
 ENV LANG=en_US.UTF-8 \
