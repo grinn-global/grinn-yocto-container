@@ -4,8 +4,9 @@ The `grinn-yocto-container` is a container image built on Ubuntu, specifically d
 
 ## Prerequisites
 
-Ensure that Docker is installed on your system by following the official installation guide [here](https://docs.docker.com/get-docker/).
-Alternatively, Podman is also supported; installation instructions are available [here](https://podman.io/getting-started/installation).
+Ensure that Docker is installed on your system by following the official setup guide [here](https://docs.docker.com/get-docker/).
+
+Alternatively, Podman is also supported. Installation instructions are available [here](https://podman.io/getting-started/installation).
 
 ## Building the Container
 
