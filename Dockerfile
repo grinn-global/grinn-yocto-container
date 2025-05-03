@@ -1,6 +1,6 @@
 FROM ubuntu:22.04
 
-ARG VERSION=0.1.0
+ARG VERSION=0.2.0
 ARG BUILDTOOLS_VERSION=4.0.26
 ARG BUILDTOOLS_SHA256=6938ec21608f6152632093f078a8d30eb2a7c9efa686e373f907a1b907e7be47
 
@@ -18,8 +18,9 @@ ENV LANG=en_US.UTF-8 \
     LC_ALL=en_US.UTF-8 \
     DEBIAN_FRONTEND=noninteractive
 
-COPY --chmod=0440 yoctouser /etc/sudoers.d/yoctouser
-COPY --chmod=0755 install-yocto-buildtools.sh /usr/local/bin/install-yocto-buildtools.sh
+COPY --chmod=0440 sudoers/yoctouser /etc/sudoers.d/yoctouser
+COPY --chmod=0755 bin/install-yocto-buildtools.sh /usr/local/bin/install-yocto-buildtools.sh
+COPY --chmod=0755 bin/entrypoint.sh /entrypoint.sh
 
 # https://docs.yoctoproject.org/ref-manual/system-requirements.html#ubuntu-and-debian
 RUN apt-get update && \
@@ -39,6 +40,7 @@ RUN apt-get update && \
         gcc \
         gcc-multilib \
         git \
+        gosu \
         iputils-ping \
         libacl1 \
         liblz4-tool \
@@ -82,14 +84,15 @@ RUN apt-get update && \
     \
     install-yocto-buildtools.sh "${BUILDTOOLS_VERSION}" "${BUILDTOOLS_SHA256}"
 
-USER yoctouser
 WORKDIR /home/yoctouser
 
-RUN touch .sudo_as_admin_successful && \
+RUN rm .bash_logout .profile && \
+    touch .sudo_as_admin_successful && \
+    chown yoctouser:yoctouser .sudo_as_admin_successful && \
     sed -i 's/#force_color_prompt=yes/force_color_prompt=yes/g' .bashrc && \
-    sed -i "/^#export GCC_COLORS=/s/^#//" ~/.bashrc && \
+    sed -i "/^#export GCC_COLORS=/s/^#//" .bashrc && \
     printf '\n%s\n' 'export PS1="🐢 $PS1"' >> .bashrc && \
     printf '\n%s\n' ". /opt/poky/${BUILDTOOLS_VERSION}/environment-setup-x86_64-pokysdk-linux" >> .bashrc
 
-ENTRYPOINT ["/usr/bin/dumb-init", "--"]
+ENTRYPOINT ["/usr/bin/dumb-init", "--", "/entrypoint.sh"]
 CMD ["/bin/bash"]

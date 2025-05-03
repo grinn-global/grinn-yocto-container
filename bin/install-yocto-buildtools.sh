@@ -1,6 +1,6 @@
 #!/bin/sh
 
-set -e
+set -eu
 
 RELEASE="$1"
 SHA256SUM="$2"
