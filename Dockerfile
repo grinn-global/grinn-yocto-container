@@ -58,6 +58,7 @@ RUN apt-get update && \
         socat \
         sudo \
         texinfo \
+        tmux \
         tzdata \
         unzip \
         vim-tiny \
