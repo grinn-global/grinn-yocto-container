@@ -15,13 +15,11 @@ trap 'rm -rf -- "$tmp_dir"' EXIT INT TERM
 cd "$tmp_dir"
 
 echo "Downloading Yocto Buildtools for release ${RELEASE}..."
-
 buildtools_installer="x86_64-buildtools-extended-nativesdk-standalone-${RELEASE}.sh"
 wget --quiet "https://downloads.yoctoproject.org/releases/yocto/yocto-${RELEASE}/buildtools/${buildtools_installer}"
 
-echo "${SHA256SUM} ${buildtools_installer}" > checksum.sha256sum
-
 echo "Verifying checksum..."
+echo "${SHA256SUM} ${buildtools_installer}" > checksum.sha256sum
 sha256sum --check checksum.sha256sum
 
 echo "Installing Yocto Buildtools..."

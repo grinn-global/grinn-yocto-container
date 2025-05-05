@@ -1,6 +1,6 @@
 FROM ubuntu:22.04
 
-ARG VERSION=0.2.0
+ARG VERSION=0.3.0
 ARG BUILDTOOLS_VERSION=4.0.26
 ARG BUILDTOOLS_SHA256=6938ec21608f6152632093f078a8d30eb2a7c9efa686e373f907a1b907e7be47
 
@@ -79,6 +79,9 @@ RUN apt-get update && \
     \
     sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && \
     locale-gen && \
+    \
+    echo 'dash dash/sh boolean false' | debconf-set-selections && \
+    dpkg-reconfigure dash && \
     \
     useradd -m -s /bin/bash yoctouser && \
     usermod -aG sudo yoctouser && \
