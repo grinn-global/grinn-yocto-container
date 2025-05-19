@@ -68,7 +68,6 @@ RUN apt-get update && \
         \
         debianutils \
         libegl1-mesa \
-        libelf-dev \
         libsdl1.2-dev \
         libstdc++-12-dev \
         lz4 \
